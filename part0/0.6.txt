@@ -1,0 +1,12 @@
+title Ex. 0.6
+
+note over browser:
+user presses the submit button
+New note details are in HTTP request body, in JSON format
+New note is added to local list that is then used to refresh shown notes
+end note
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: HTTP 201 resource created
+note over browser:
+notice how the full list of notes is not retrieved anymore
+end note
