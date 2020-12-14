@@ -3,7 +3,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const Header = (props) => {
-  console.log(props);
   return (<h1>{props.course}</h1>);
 }
 
@@ -13,14 +12,13 @@ const Part = (props) => (
   </p>
 )
 
-const Content = (props) => (<>
-    {
-      props.parts.map((p) => (<Part part={p}}))
-    }
-</>)
+const Content = (props) => (<>{
+    props.parts.map((p, idx) => (<Part key={`part${idx}`} part={p} />))
+  }</>
+)
 
 const Total = (props) => (
-  <p>Number of exercises {props.val)}</p>
+  <p>Number of exercises {props.val}</p>
 )
 
 const App = () => {
@@ -46,7 +44,7 @@ const App = () => {
     <div>
       <Header course = {course.name}/>
       <Content parts={course.parts} />
-      <Total val = {course.parts.reduce((tot, val) => (tot+val.exercises))} />
+      <Total val={course.parts.map(o => o.exercises).reduce((tot, val) => (tot+val))} />
     </div>
   )
 }
