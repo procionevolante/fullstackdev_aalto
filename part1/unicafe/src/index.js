@@ -14,13 +14,16 @@ const Percentage = ({name, value}) => (
 )
 
 const Statistics = ({scores}) => {
+  // don't render if no statistics
+  if (scores.every(s => (s === 0)))
+    return <p>No feedback given</p>;
+
   const names = ['good', 'neutral', 'bad'];
   const all = scores.reduce((tot, val) => tot+val);
   const avg = (scores[0] - scores[2]) / all;
   const percpos = (scores[0] / all) * 100;
 
   return <>
-    <h1>Statistics</h1>
     {
       scores.map((s, i) =>
         <Counter key={names[i]} name={names[i]} value={scores[i]} />
@@ -45,6 +48,7 @@ const App = () => {
       <button onClick={() => setNeutral(neutral+1)}> neutral </button>
       <button onClick={() => setBad(bad+1)}> bad </button>
 
+      <h1>Statistics</h1>
       <Statistics scores={[good, neutral, bad]} />
     </div>
   )
