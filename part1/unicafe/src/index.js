@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 const Statistic = ({text, value}) => (
-  <div>
-    {text} {value}
-  </div>
+  <tr>
+    <td>{text}</td><td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({names, scores}) => {
@@ -16,7 +16,7 @@ const Statistics = ({names, scores}) => {
   const avg = (scores[0] - scores[2]) / all;
   const percpos = (scores[0] / all) * 100;
 
-  return <>
+  return <table><tbody>
     {
       scores.map((s, i) =>
         <Statistic key={names[i]} text={names[i]} value={scores[i]} />
@@ -25,7 +25,7 @@ const Statistics = ({names, scores}) => {
     <Statistic text={'all'} value={all} />
     <Statistic text={'average'} value={avg} />
     <Statistic text={'positive'} value={`${percpos}%`} />
-  </>
+  </tbody></table>
 }
 
 // advantage of this is that whatever we use as text is not
