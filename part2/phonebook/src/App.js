@@ -7,9 +7,10 @@ const App = () => {
     { name: 'Ada Lovelace', number: '39-44-5323523' },
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' },
-  ]) 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
+  ].map((p, i) => ({...p, id: i})));
+  const [ newName, setNewName ] = useState('');
+  const [ newNumber, setNewNumber ] = useState('');
+  const [ nameFilter, setNameFilter ] = useState('');
 
   // triggered on form submit
   const addPersonToPhonebook = (event) => {
@@ -28,6 +29,9 @@ const App = () => {
       number: newNumber,
     }));
   }
+  const handleNameFilterChange = (event) => {
+    setNameFilter(event.target.value);
+  }
   const handleNameChange = (event) => {
     console.log(event.target.value);
     setNewName(event.target.value);
@@ -40,6 +44,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        Filter by name: <input value={nameFilter} onChange={handleNameFilterChange} />
+      </div>
       <form onSubmit={addPersonToPhonebook}>
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
@@ -53,7 +60,8 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {
-        persons.map(p => <Person key={p.id} person={p} />)
+        persons.filter(p => p.name.toLowerCase().includes(nameFilter.toLowerCase()))
+          .map(p => <Person key={p.id} person={p} />)
       }
     </div>
   )
