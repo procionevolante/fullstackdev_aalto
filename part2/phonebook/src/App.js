@@ -3,9 +3,13 @@ import Person from './components/Person';
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { id:1, name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' },
   ]) 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
   // triggered on form submit
   const addPersonToPhonebook = (event) => {
@@ -16,16 +20,21 @@ const App = () => {
       return;
     }
     // newId = maxID + 1
-    const newId = persons.reduce((acc, cur) => ((cur > acc)? cur : acc), 0) + 1;
+    const newId = persons.reduce((acc, cur) => ((cur.id > acc)? cur.id : acc), 0) + 1;
 
     setPersons(persons.concat({
       id : newId,
-      name: newName
+      name: newName,
+      number: newNumber,
     }));
   }
   const handleNameChange = (event) => {
     console.log(event.target.value);
     setNewName(event.target.value);
+  }
+  const handleNumberChange = (event) => {
+    console.log(event.target.value);
+    setNewNumber(event.target.value);
   }
 
   return (
@@ -34,6 +43,9 @@ const App = () => {
       <form onSubmit={addPersonToPhonebook}>
         <div>
           name: <input value={newName} onChange={handleNameChange}/>
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNumberChange}/>
         </div>
         <div>
           <button type="submit">add</button>
