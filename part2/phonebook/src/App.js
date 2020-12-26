@@ -10,6 +10,11 @@ const App = () => {
   // triggered on form submit
   const addPersonToPhonebook = (event) => {
     event.preventDefault();
+    // check if person already in phonebook. If so exit
+    if (persons.map(p => p.name).includes(newName)) {
+      alert(`${newName} is already added to the phonebook`);
+      return;
+    }
     // newId = maxID + 1
     const newId = persons.reduce((acc, cur) => ((cur > acc)? cur : acc), 0) + 1;
 
