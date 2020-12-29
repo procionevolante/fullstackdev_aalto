@@ -10,6 +10,10 @@ const addPerson = (pers) =>
   axios.post(`${baseUrl}/persons`, pers)
     .then(res => res.data);
 
+const updatePerson = (pers) =>
+  axios.put(`${baseUrl}/persons/${pers.id}`, pers)
+    .then(res => res.data);
+
 const deletePerson = (id) =>
   axios.delete(`${baseUrl}/persons/${id}`)
     .then(res => res.data);
@@ -17,6 +21,7 @@ const deletePerson = (id) =>
 const exported = {
   getAllPersons,
   addPerson,
+  updatePerson,
   deletePerson,
 };
 

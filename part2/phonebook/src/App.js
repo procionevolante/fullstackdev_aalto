@@ -19,14 +19,18 @@ const App = () => {
   // triggered on form submit
   const addPersonToPhonebook = (event) => {
     event.preventDefault();
-    // check if person already in phonebook. If so exit
-    if (persons.map(p => p.name).includes(newPerson.name)) {
-      alert(`${newPerson.name} is already added to the phonebook`);
-      return;
+    // check if person already in phonebook.
+    if (persons.map(p => p.name).includes(newPerson.name) &&
+      window.confirm(`${newPerson.name} is already added to the phonebook, replace old number with new one?`)) {
+      const oldpers = persons.find(p => p.name === newPerson.name);
+      phonebookService.updatePerson({...oldpers, ...newPerson})
+        .then(newpers =>
+          setPersons(persons.map(p => p.id === oldpers.id ? newpers : p))
+        )
+    }else {
+      phonebookService.addPerson(newPerson)
+        .then(p => setPersons(persons.concat(p)));
     }
-
-    phonebookService.addPerson(newPerson)
-      .then(p => setPersons(persons.concat(p)));
   }
 
   const deletePersonFromPhonebook = (id) => {
