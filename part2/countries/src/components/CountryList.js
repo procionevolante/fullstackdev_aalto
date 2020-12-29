@@ -4,7 +4,6 @@ import axios from 'axios';
 const getCurrentWeather = async (city) => {
   const api_key = process.env.REACT_APP_API_KEY;
   const baseWeatherUrl = 'http://api.weatherstack.com';
-  console.log('getCurrentWeather');
 
   return axios.get(`${baseWeatherUrl}/current?access_key=${api_key}&query=${city}`);
 }

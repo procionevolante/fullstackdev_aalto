@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PersonList from './components/PersonList';
 import NewPersonForm from './components/NewPersonForm';
-import axios from 'axios';
+import phonebookService from './services/phonebook';
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
@@ -10,11 +10,10 @@ const App = () => {
     number: '',
   });
   const [ nameFilter, setNameFilter ] = useState('');
-  const baseurl = 'http://localhost:3001';
 
   useEffect(() => {
-    axios.get(`${baseurl}/persons`)
-      .then(res => setPersons(res.data));
+    phonebookService.getAllPersons()
+      .then(data => setPersons(data));
   }, []);
 
   // triggered on form submit
@@ -25,19 +24,22 @@ const App = () => {
       alert(`${newPerson.name} is already added to the phonebook`);
       return;
     }
-    // newId = maxID + 1
-    const newId = persons.reduce((acc, cur) => ((cur.id > acc)? cur.id : acc), 0) + 1;
 
-    setPersons(persons.concat({
-      ...newPerson,
-      id : newId,
-    }));
+    phonebookService.addPerson(newPerson)
+      .then(p => setPersons(persons.concat(p)));
   }
+
+  const deletePersonFromPhonebook = (id) => {
+    phonebookService.deletePerson(id)
+      .then(data => setPersons(persons.filter(p => p.id !== id)))
+      .catch(err => alert('error. Person already deleted?'));
+  }
+
   const handleNameFilterChange = (event) => {
     setNameFilter(event.target.value);
   }
+
   const handlePersonChange = (event) => {
-    console.log(event.target.name, event.target.value);
     setNewPerson({
       ...newPerson,
       [event.target.name]: event.target.value,
@@ -57,7 +59,7 @@ const App = () => {
         addPerson = {addPersonToPhonebook}
       />
       <h2>Numbers</h2>
-      <PersonList nameFilter={nameFilter} persons={persons} />
+      <PersonList deletePerson={deletePersonFromPhonebook} nameFilter={nameFilter} persons={persons} />
     </div>
   )
 }
