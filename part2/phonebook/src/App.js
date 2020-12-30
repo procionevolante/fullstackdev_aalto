@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PersonList from './components/PersonList';
+import Message from './components/Message';
 import NewPersonForm from './components/NewPersonForm';
 import phonebookService from './services/phonebook';
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
+  const [ message, setMessage ] = useState(null);
+  const msgTimeout = 3000; // in ms
   const [ newPerson, setNewPerson ] = useState({
     name : '',
     number: '',
@@ -24,19 +27,30 @@ const App = () => {
       window.confirm(`${newPerson.name} is already added to the phonebook, replace old number with new one?`)) {
       const oldpers = persons.find(p => p.name === newPerson.name);
       phonebookService.updatePerson({...oldpers, ...newPerson})
-        .then(newpers =>
-          setPersons(persons.map(p => p.id === oldpers.id ? newpers : p))
-        )
+        .then(newpers => {
+          setPersons(persons.map(p => p.id === oldpers.id ? newpers : p));
+          setMessage({type: 'success', text: `Updated ${newpers.name}`});
+          setTimeout(()=> setMessage(null), msgTimeout);
+        })
     }else {
       phonebookService.addPerson(newPerson)
-        .then(p => setPersons(persons.concat(p)));
+        .then(p => {
+          setPersons(persons.concat(p));
+          setMessage({type: 'success', text: `Added ${p.name}`});
+          setTimeout(()=> setMessage(null), msgTimeout);
+        });
     }
   }
 
   const deletePersonFromPhonebook = (id) => {
     phonebookService.deletePerson(id)
-      .then(data => setPersons(persons.filter(p => p.id !== id)))
-      .catch(err => alert('error. Person already deleted?'));
+      .then(data => setMessage({type: 'success', text: `Deleted ${persons.find(p=>p.id===id).name}`}))
+      .catch(err =>
+        setMessage({type: 'error', text: `Information of '${persons.find(p=>p.id===id).name}' might have already been removed from the server`})
+      ).finally(data => {
+        setPersons(persons.filter(p => p.id !== id))
+        setTimeout(()=> setMessage(null), msgTimeout);
+      });
   }
 
   const handleNameFilterChange = (event) => {
@@ -53,6 +67,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Message msg={message} />
       <div>
         Filter by name: <input value={nameFilter} onChange={handleNameFilterChange} />
       </div>
