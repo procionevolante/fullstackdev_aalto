@@ -19,6 +19,13 @@ const App = () => {
       .then(data => setPersons(data));
   }, []);
 
+  const showResult = (type, msg) => {
+    if (type === 'error')
+      console.error(msg);
+    setMessage({type, text:msg});
+    setTimeout(()=>setMessage(null), msgTimeout);
+  }
+
   // triggered on form submit
   const addPersonToPhonebook = (event) => {
     event.preventDefault();
@@ -31,14 +38,14 @@ const App = () => {
           setPersons(persons.map(p => p.id === oldpers.id ? newpers : p));
           setMessage({type: 'success', text: `Updated ${newpers.name}`});
           setTimeout(()=> setMessage(null), msgTimeout);
-        })
+        }).catch(err => showResult('error', err.response.data.error));
     }else {
       phonebookService.addPerson(newPerson)
         .then(p => {
           setPersons(persons.concat(p));
           setMessage({type: 'success', text: `Added ${p.name}`});
           setTimeout(()=> setMessage(null), msgTimeout);
-        });
+        }).catch(err => showResult('error', err.response.data.error));
     }
   }
 
