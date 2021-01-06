@@ -29,7 +29,6 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 app.use('/api/blogs', blogsRouter);
-
 app.use('/api/users', usersRouter);
 
 app.use(middleware.unknownEndpoint);
