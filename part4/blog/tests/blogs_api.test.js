@@ -15,6 +15,14 @@ const blogs = [
 
 beforeEach(async () => {
   await Blog.deleteMany({});
+
+  const blogObjs = blogs.map(b => new Blog(b));
+  const allPromises = blogObjs.map(bo => bo.save());
+
+  await Promise.all(allPromises);
+
+  return;
+  await Blog.deleteMany({});
   let obj = new Blog(blogs[0]);
   await obj.save();
 
@@ -40,6 +48,23 @@ test('all blogs are returned', async () => {
   expect(response.body).toHaveLength(blogs.length);
 })
 
+test('creating a blog increases length of object', async () => {
+  const blog = new Blog({
+    _id: "5a422b3a1b54a676234d17bc",
+    title: "On the importance of procrastination",
+    author: "Andrea Fanti",
+    url: "fuffa.it",
+    likes: 12,
+    __v: 0,
+  });
+
+  await blog.save();
+
+  const response = await api.get('/api/blogs');
+
+  expect(response.body).toHaveLength(blogs.length + 1);
+})
+
 afterAll(() => {
-  mongoose.connection.close()
+  mongoose.connection.close();
 })
