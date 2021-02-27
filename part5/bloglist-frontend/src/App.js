@@ -15,6 +15,17 @@ const App = () => {
     )  
   }, [])
 
+  // check if we already did login. If yes, load user&token from there
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+
+      setUser(user);
+      blogService.setToken(user.token);
+    }
+  }, []);
+
   const handleLogin = async (event) =>{ 
     event.preventDefault();
 
@@ -24,9 +35,9 @@ const App = () => {
       });
 
       // note: what is saved is a string (not directly an object)
-      //window.localStorage.setItem(
-      //  'loggedBlogappUser', JSON.stringify(user)
-      //)
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
 
       blogService.setToken(user.token);
       setUser(user);
@@ -38,6 +49,11 @@ const App = () => {
       console.error('wrong user/password');
     }
 
+  }
+
+  const handleLogout = async (event) =>{ 
+    window.localStorage.removeItem('loggedBlogappUser');
+    setUser(null);
   }
 
   if (user === null) {
@@ -61,15 +77,10 @@ const App = () => {
 
   return (
     <div>
-      <div> {user.name} logged in </div>
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
-  return (
-    <div>
+      <div>
+        {user.name} logged in
+        <input type='button' value='logout' onClick={handleLogout} />
+      </div>
       <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
