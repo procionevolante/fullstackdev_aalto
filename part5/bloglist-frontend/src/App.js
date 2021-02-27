@@ -12,6 +12,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [feedback, setFeedback] = useState(null);
+  const [blogFilter, setBlogFilter] = useState({}); // if falsy: show basic. truthy: show details (of blog)
   const blogFormRef = useRef();
 
   useEffect(() => {
@@ -34,6 +35,11 @@ const App = () => {
   const showFeedback = (msg) => {
     setFeedback(msg);
     setTimeout(()=>{setFeedback(null)}, 2000);
+  }
+
+  const toggleDetails = (blogId) => {
+    // when you need to work fast you really come up with ugly things
+    setBlogFilter({...blogFilter, [blogId]:!blogFilter[blogId]});
   }
 
   const handleNewBlog = async (newBlog) => {
@@ -102,7 +108,11 @@ const App = () => {
       </div>
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id}
+          blog={blog}
+          showDetails={!!blogFilter[blog.id]}
+          toggleDetails={()=>{toggleDetails(blog.id)}}
+        />
       )}
       <Togglable buttonLabel='new blog' ref={blogFormRef} >
         <BlogForm onSubmit={handleNewBlog} />
