@@ -10,6 +10,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [newBlog, setNewBlog] = useState({title:'', author:'', url:''});
+  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -28,9 +29,20 @@ const App = () => {
     }
   }, []);
 
+  const showFeedback = (msg) => {
+    setFeedback(msg);
+    setTimeout(()=>{setFeedback(null)}, 2000);
+  }
+
   const handleNewBlog = async () => {
-    await blogService.save(newBlog);
-    setBlogs([...blogs, newBlog]);
+    try {
+      await blogService.save(newBlog);
+      showFeedback('blog added successfully');
+      setBlogs([...blogs, newBlog]);
+    }catch(err){
+      console.error(err);
+      showFeedback('error while adding blog');
+    }
   }
 
   const handleLogin = async (event) =>{ 
@@ -51,9 +63,10 @@ const App = () => {
       setUsername('');
       setPassword('');
 
-
+      showFeedback('login successful');
     } catch (exception) {
       console.error('wrong user/password');
+      showFeedback('login unsuccessful. Wrong password?');
     }
 
   }
@@ -61,12 +74,14 @@ const App = () => {
   const handleLogout = async (event) =>{ 
     window.localStorage.removeItem('loggedBlogappUser');
     setUser(null);
+    showFeedback('logout completed');
   }
 
   if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
+        {feedback}
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -84,6 +99,7 @@ const App = () => {
 
   return (
     <div>
+      {feedback}
       <div>
         {user.name} logged in
         <input type='button' value='logout' onClick={handleLogout} />
