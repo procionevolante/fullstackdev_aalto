@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.map(b=> ({...b, likes:(b.likes?b.likes:0)})) )
     )  
   }, [])
 
@@ -40,6 +40,11 @@ const App = () => {
   const toggleDetails = (blogId) => {
     // when you need to work fast you really come up with ugly things
     setBlogFilter({...blogFilter, [blogId]:!blogFilter[blogId]});
+  }
+
+  const handleLike = async (blog) => {
+    const newBlog = await blogService.like(blog);
+    setBlogs(blogs.filter(b => b.id !== blog.id).concat(newBlog));
   }
 
   const handleNewBlog = async (newBlog) => {
@@ -112,6 +117,7 @@ const App = () => {
           blog={blog}
           showDetails={!!blogFilter[blog.id]}
           toggleDetails={()=>{toggleDetails(blog.id)}}
+          like={()=>{handleLike(blog)}}
         />
       )}
       <Togglable buttonLabel='new blog' ref={blogFormRef} >
