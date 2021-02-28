@@ -15,7 +15,7 @@ const Blog = ({ blog, like, remove, canRemove }) => {
       <div className='blog-url' >{blog.url}</div>
       <div className='blog-likes' >
         likes {blog.likes || '0'}
-        <input type='button' value='like'
+        <input type='button' value='like' className='btn-like'
           onClick={like}
         />
       </div>
@@ -26,7 +26,6 @@ const Blog = ({ blog, like, remove, canRemove }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  showDetails: PropTypes.bool,
   like: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,
   canRemove: PropTypes.bool,

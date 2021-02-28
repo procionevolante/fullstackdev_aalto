@@ -3,12 +3,16 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
-const blog = {
-  title: 'how to test components in React',
-  author: 'University of Helsinki',
-  url: 'fuffa.it',
-  likes: 10,
-}
+let blog;
+
+beforeEach(async () => {
+  blog = {
+    title: 'how to test components in React',
+    author: 'University of Helsinki',
+    url: 'fuffa.it',
+    likes: 10,
+  }
+})
 
 test('renders content', () => {
   const f = () => {}; // dummy function to not trigger propTypes/React complaining
@@ -16,7 +20,6 @@ test('renders content', () => {
   const component = render(
     <Blog
       blog={blog}
-      toggleDetails={f}
       like={f}
       remove={f}
     />
@@ -37,7 +40,6 @@ test('show-details button click', () => {
   const component = render(
     <Blog
       blog={blog}
-      toggleDetails={f}
       like={f}
       remove={f}
     />
@@ -54,25 +56,22 @@ test('show-details button click', () => {
 })
 
 test('like blog button test', () => {
-  const cnt = 0;
-  const likefunc = () => {
-    cnt ++;
-  }
+  const mockLikefunc = jest.fn();
   const f = () => {}; // dummy function to not trigger propTypes/React complaining
   const component = render(
     <Blog
       blog={blog}
-      toggleDetails={f}
-      like={likefunc}
+      like={mockLikefunc}
       remove={f}
     />
   )
   const showDetailsBtn = component.getByText('view');
   fireEvent.click(showDetailsBtn); // to render the like btn
+  
+  const likeBtn = component.container.querySelector('.btn-like');
 
-  const likeBtn = component.container.querySelector('.blog-likes input');
   fireEvent.click(likeBtn); // 1st time
-  expect(component.container.querySelector('.blog-likes')).toHaveTextContent('1');
   fireEvent.click(likeBtn); // 2nd time
-  expect(component.container.querySelector('.blog-likes')).toHaveTextContent('2');
+  //expect(mockLikefunc.mock.calls).toHaveLength(2); // doesn't work
+  expect(mockLikefunc.mock.calls.length).toBe(2);
 })
