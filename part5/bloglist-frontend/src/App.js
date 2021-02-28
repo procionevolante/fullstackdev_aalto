@@ -128,7 +128,7 @@ const App = () => {
           showDetails={!!blogFilter[blog.id]}
           toggleDetails={()=>{toggleDetails(blog.id)}}
           like={()=>{handleLike(blog)}}
-          canRemove={blog.user.id === user.id}
+          canRemove={blog.user.username === user.username}
           remove={()=>{handleRemove(blog)}}
         />
       )}

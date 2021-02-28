@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Blog = ({ blog, showDetails, toggleDetails, like, remove, canRemove }) => (
   <div>
@@ -15,5 +16,14 @@ const Blog = ({ blog, showDetails, toggleDetails, like, remove, canRemove }) => 
   {canRemove?<button onClick={remove}>{'delete'}</button>:null}
   </div>
 )
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  showDetails: PropTypes.func.isRequired,
+  toggleDetails: PropTypes.func.isRequired,
+  like: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  canRemove: PropTypes.bool.isRequired,
+}
 
 export default Blog;
