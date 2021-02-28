@@ -35,7 +35,10 @@ blogsRouter.post('/', async (request, response) => {
   });
   
   const newBlog = await blog.save();
-  response.status(201).json(newBlog);
+  Blog
+    .findOne(newBlog)
+    .populate('user')
+    .then(data => response.status(201).json(data));
 });
 
 blogsRouter.delete('/:id', async (req, res) => {

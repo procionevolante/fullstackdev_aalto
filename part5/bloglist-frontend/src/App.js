@@ -12,7 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [feedback, setFeedback] = useState(null);
-  const [blogFilter, setBlogFilter] = useState({}); // map blogid->boolean. if falsy: show basic. truthy: show details (of blog)
   const blogFormRef = useRef();
 
   useEffect(() => {
@@ -37,14 +36,6 @@ const App = () => {
     setTimeout(()=>{setFeedback(null)}, 2000);
   }
 
-  const toggleDetails = (blogId) => {
-    // when you need to work fast you really come up with ugly things
-    setBlogFilter({...blogFilter, [blogId]:!blogFilter[blogId]});
-    // i apologize to the person checking the code for the exam, especially
-    // from part5 if you meet me in Helsinki tell me the secret word
-    // 'watermelon' and I will offer you a coffee
-  }
-
   const handleLike = async (blog) => {
     const newBlog = await blogService.like(blog);
     setBlogs(blogs.filter(b => b.id !== blog.id).concat(newBlog));
@@ -59,10 +50,10 @@ const App = () => {
 
   const handleNewBlog = async (newBlog) => {
     try {
-      await blogService.save(newBlog);
+      const result = await blogService.save(newBlog);
       showFeedback('blog added successfully');
-      setBlogs([...blogs, newBlog]);
-      blogFormRef.current.toggleVisibility();
+      setBlogs([...blogs, result]);
+      blogFormRef.current.toggleVisibility(); // hide the "new blog" form
     }catch(err){
       console.error(err);
       showFeedback('error while adding blog');
@@ -122,15 +113,14 @@ const App = () => {
         <input type='button' value='logout' onClick={handleLogout} />
       </div>
       <h2>blogs</h2>
-      {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog =>
-        <Blog key={blog.id}
+      {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog => {
+        return <Blog key={blog.id}
           blog={blog}
-          showDetails={!!blogFilter[blog.id]}
-          toggleDetails={()=>{toggleDetails(blog.id)}}
           like={()=>{handleLike(blog)}}
           canRemove={blog.user.username === user.username}
           remove={()=>{handleRemove(blog)}}
         />
+      }
       )}
       <Togglable buttonLabel='new blog' ref={blogFormRef} >
         <BlogForm onSubmit={handleNewBlog} />
@@ -139,4 +129,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;
