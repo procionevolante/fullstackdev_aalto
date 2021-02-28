@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 const Blog = ({ blog, showDetails, toggleDetails, like, remove, canRemove }) => (
   <div>
-    {blog.title} {blog.author} <input type='button' value={showDetails?'hide':'view'} onClick={toggleDetails} />
+    <span className='blog-title-author' >{blog.title} {blog.author}</span> <input type='button' value={showDetails?'hide':'view'} onClick={toggleDetails} />
     {showDetails?<>
-      <div>{blog.url}</div>
-      <div>
+      <div className='blog-url' >{blog.url}</div>
+      <div className='blog-likes' >
         likes {blog.likes || '0'}
         <input type='button' value='like'
           onClick={like}
@@ -19,11 +19,11 @@ const Blog = ({ blog, showDetails, toggleDetails, like, remove, canRemove }) => 
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  showDetails: PropTypes.func.isRequired,
+  showDetails: PropTypes.bool,
   toggleDetails: PropTypes.func.isRequired,
   like: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,
-  canRemove: PropTypes.bool.isRequired,
+  canRemove: PropTypes.bool,
 }
 
 export default Blog;

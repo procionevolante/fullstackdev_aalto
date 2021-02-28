@@ -12,7 +12,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [feedback, setFeedback] = useState(null);
-  const [blogFilter, setBlogFilter] = useState({}); // if falsy: show basic. truthy: show details (of blog)
+  const [blogFilter, setBlogFilter] = useState({}); // map blogid->boolean. if falsy: show basic. truthy: show details (of blog)
   const blogFormRef = useRef();
 
   useEffect(() => {
