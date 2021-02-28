@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Blog = ({ blog, showDetails, toggleDetails, like }) => (
+const Blog = ({ blog, showDetails, toggleDetails, like, remove, canRemove }) => (
   <div>
     {blog.title} {blog.author} <input type='button' value={showDetails?'hide':'view'} onClick={toggleDetails} />
     {showDetails?<>
@@ -12,6 +12,7 @@ const Blog = ({ blog, showDetails, toggleDetails, like }) => (
         />
       </div>
     </>:null}
+  {canRemove?<button onClick={remove}>{'delete'}</button>:null}
   </div>
 )
 
