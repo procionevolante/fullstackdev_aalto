@@ -43,7 +43,7 @@ test('show-details button click', () => {
     />
   )
   const showDetailsBtn = component.getByText('view');
-  fireEvent.click(showDetailsBtn)
+  fireEvent.click(showDetailsBtn);
   
   expect(component.container).toHaveTextContent(
     'fuffa.it'
@@ -51,4 +51,28 @@ test('show-details button click', () => {
   expect(component.container).toHaveTextContent(
     '10'
   )
+})
+
+test('like blog button test', () => {
+  const cnt = 0;
+  const likefunc = () => {
+    cnt ++;
+  }
+  const f = () => {}; // dummy function to not trigger propTypes/React complaining
+  const component = render(
+    <Blog
+      blog={blog}
+      toggleDetails={f}
+      like={likefunc}
+      remove={f}
+    />
+  )
+  const showDetailsBtn = component.getByText('view');
+  fireEvent.click(showDetailsBtn); // to render the like btn
+
+  const likeBtn = component.container.querySelector('.blog-likes input');
+  fireEvent.click(likeBtn); // 1st time
+  expect(component.container.querySelector('.blog-likes')).toHaveTextContent('1');
+  fireEvent.click(likeBtn); // 2nd time
+  expect(component.container.querySelector('.blog-likes')).toHaveTextContent('2');
 })
