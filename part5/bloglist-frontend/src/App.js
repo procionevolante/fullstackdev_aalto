@@ -112,7 +112,7 @@ const App = () => {
         <input type='button' value='logout' onClick={handleLogout} />
       </div>
       <h2>blogs</h2>
-      {blogs.map(blog =>
+      {blogs.sort((b1, b2) => b2.likes - b1.likes).map(blog =>
         <Blog key={blog.id}
           blog={blog}
           showDetails={!!blogFilter[blog.id]}
