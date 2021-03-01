@@ -5,13 +5,13 @@ const LoginForm = ({username, password, setUsername, setPassword, handleSubmit})
   onSubmit={(event) =>{event.preventDefault(); handleSubmit();} }>
     <div>
       username
-      <input value={username} name='Username' onChange={({target}) => setUsername(target.value)} />
+      <input value={username} id='username' name='Username' onChange={({target}) => setUsername(target.value)} />
     </div>
     <div>
       password
-      <input value={password} name='Password' type='password' onChange={({target}) => setPassword(target.value)} />
+      <input value={password} id='password' name='Password' type='password' onChange={({target}) => setPassword(target.value)} />
     </div>
-    <input type='submit' value='login' />
+    <input id='login-button' type='submit' value='login' />
   </form>
 
 LoginForm.propTypes = {
