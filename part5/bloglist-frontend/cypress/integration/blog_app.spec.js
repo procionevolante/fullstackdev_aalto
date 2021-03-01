@@ -3,6 +3,11 @@ const user = {
   name: 'morandi',
   password: 'giannimorandi',
 }
+const blog = {
+  author: 'Timothy Dexter',
+  title: 'A Pickle for the Knowing Ones',
+  url: 'https://en.wikipedia.org/wiki/Timothy_Dexter#Writing',
+}
 
 describe('Blog app', function() {
   beforeEach(function() {
@@ -15,12 +20,26 @@ describe('Blog app', function() {
     cy.contains('username');
     cy.contains('password');
   })
+
   describe('Login',function() {
-    it('succeeds with correct credentials', function() {
-      cy.get('#username').type(user.username);
-      cy.get('#password').type(user.password);
-      cy.get('#login-button').click();
-      cy.contains(`${user.name} logged in`);
+    describe.only('succeeds with correct credentials', function() {
+      beforeEach(function () {
+        cy.get('#username').type(user.username);
+        cy.get('#password').type(user.password);
+        cy.get('#login-button').click();
+        cy.contains(`${user.name} logged in`);
+      })
+
+      it('A blog can be created', function() {
+        cy.contains('new blog').click(); // open the 'new blog' form
+        cy.get('input[name=title]').type(blog.title);
+        cy.get('input[name=author]').type(blog.author);
+        cy.get('input[name=url]').type(blog.url);
+        cy.get('input[type=submit][value=save]').click();
+
+        cy.contains('blog added successfully');
+        cy.get('.blog-title-author').contains(blog.title);
+      })
     })
 
     it('fails with wrong credentials', function() {
