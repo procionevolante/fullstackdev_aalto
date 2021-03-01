@@ -30,15 +30,24 @@ describe('Blog app', function() {
         cy.contains(`${user.name} logged in`);
       })
 
-      it('A blog can be created', function() {
-        cy.contains('new blog').click(); // open the 'new blog' form
-        cy.get('input[name=title]').type(blog.title);
-        cy.get('input[name=author]').type(blog.author);
-        cy.get('input[name=url]').type(blog.url);
-        cy.get('input[type=submit][value=save]').click();
+      describe.only('A blog can be created', function() {
+        beforeEach(function() {
+          cy.contains('new blog').click(); // open the 'new blog' form
+          cy.get('input[name=title]').type(blog.title);
+          cy.get('input[name=author]').type(blog.author);
+          cy.get('input[name=url]').type(blog.url);
+          cy.get('input[type=submit][value=save]').click();
 
-        cy.contains('blog added successfully');
-        cy.get('.blog-title-author').contains(blog.title);
+          cy.contains('blog added successfully');
+          cy.get('.blog-title-author').contains(blog.title);
+        })
+
+        it('A blog can be liked', function() {
+          cy.get('input[type=button][value=view]').click();
+          cy.get('.blog-likes').contains('likes 0');
+          cy.get('.btn-like').click();
+          cy.get('.blog-likes').contains('likes 1');
+        })
       })
     })
 
