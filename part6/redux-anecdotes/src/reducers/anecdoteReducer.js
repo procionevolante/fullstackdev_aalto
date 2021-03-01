@@ -7,7 +7,7 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-const getId = () => (100000 * Math.random()).toFixed(0);
+const getId = () => (100000 * Math.random()).toFixed(0); // used to generate new random IDs
 
 const asObject = (anecdote) => {
   return {
@@ -20,16 +20,30 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject);
 
 const reducer = (state = initialState, action) => {
-  if(action.type === 'CAST_VOTE') {
+  switch(action.type){
+    case 'CAST_VOTE':
       const aid = action.data.aid;
       const tobechanged = state.find((a) => a.id === aid);
       const changed = {...tobechanged, votes: tobechanged.votes + 1};
       return state.map((a) => a.id !== aid? a:changed);
+    case 'NEW_ANECDOTE':
+      console.log('NEW anecdote!', action.data)
+      return state.concat(action.data);
+    default:
+      return state;
   }
-  return state;
 }
-export const voteFor = (aid) => {
-  return {type: 'CAST_VOTE', data: {aid}};
-}
+export const newAnecdote = (msg) => ({
+  type: 'NEW_ANECDOTE',
+  data: {
+    id: getId(),
+    content: msg,
+    votes: 0,
+  },
+})
+export const voteFor = (aid) => ({
+  type: 'CAST_VOTE',
+  data: {aid}
+})
 
 export default reducer;
