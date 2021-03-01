@@ -48,6 +48,12 @@ describe('Blog app', function() {
           cy.get('.btn-like').click();
           cy.get('.blog-likes').contains('likes 1');
         })
+
+        it('A blog can be deleted', function(){
+          cy.get('input[value=delete]').click();
+          cy.on('window:confirm', () => true); // press OK on dialog
+          cy.contains('blog successfully deleted');
+        })
       })
     })
 

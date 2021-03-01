@@ -15,12 +15,12 @@ const Blog = ({ blog, like, remove, canRemove }) => {
       <div className='blog-url' >{blog.url}</div>
       <div className='blog-likes' >
         likes {blog.likes || '0'}
-        <input type='button' value='like' className='btn-like'
+        <input className='blog-delete' type='button' value='like' className='btn-like'
           onClick={like}
         />
       </div>
     </>:null}
-  {canRemove?<button onClick={remove}>{'delete'}</button>:null}
+  {canRemove?<input type='button' value='delete' onClick={remove} />:null}
   </div>
 }
 

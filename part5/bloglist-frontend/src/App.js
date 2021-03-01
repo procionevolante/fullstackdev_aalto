@@ -46,6 +46,7 @@ const App = () => {
       return;
     await blogService.remove(blog);
     setBlogs(blogs.filter(b => b.id !== blog.id));
+    showFeedback('blog successfully deleted');
   }
 
   const handleNewBlog = async (newBlog) => {
